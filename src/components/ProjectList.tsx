@@ -40,9 +40,14 @@ export const ProjectList = ({ onAddProject, statusFilter }: ProjectListProps) =>
     }
   };
 
-  const filteredProjects = statusFilter === 'All'
-    ? projects
-    : projects.filter(p => p.status === statusFilter);
+  const filteredProjects = (() => {
+    if (statusFilter === 'All') return projects;
+    if (statusFilter === 'Upcoming') {
+      const today = new Date().toISOString().slice(0, 10);
+      return projects.filter(p => (p.start_date ?? '') > today);
+    }
+    return projects.filter(p => p.status === statusFilter);
+  })();
 
   if (loading) {
     return (
@@ -102,7 +107,8 @@ export const ProjectList = ({ onAddProject, statusFilter }: ProjectListProps) =>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ml-4 ${
                     project.status === 'Completed' ? 'bg-green-100 text-green-700' :
                     project.status === 'Ongoing' ? 'bg-blue-100 text-blue-700' :
-                    'bg-amber-100 text-amber-700'
+                    project.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
+                    'bg-gray-100 text-gray-700'
                   }`}>
                     {project.status}
                   </span>
