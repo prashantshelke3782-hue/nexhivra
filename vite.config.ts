@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/nexhivra/', // GitHub Pages ke liye
+  base: '/', // for Vercel
 });
